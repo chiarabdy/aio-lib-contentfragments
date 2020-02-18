@@ -8,14 +8,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-
+require('dotenv').config()
 const Swagger = require('swagger-client')
-// const loggerNamespace = '@{{REPO}}'
-// const logger = require('@adobe/aio-lib-core-logging')(loggerNamespace, { level: process.env.LOG_LEVEL })
-const {createRequestOptions} = require('./helpers')
+const loggerNamespace = '@{{REPO}}'
+const logger = require('@adobe/aio-lib-core-logging')(loggerNamespace, { level: process.env.LOG_LEVEL })
+const { reduceError, requestInterceptor, responseInterceptor, createRequestOptions } = require('./helpers')
 const { codes } = require('./SDKErrors')
 
-// require('./types.jsdoc') // for VS Code autocomplete
+require('./types.jsdoc') // for VS Code autocomplete
 
 /**
  * Returns a Promise that resolves with a new contentfragmentCoreAPI object.
@@ -31,11 +31,11 @@ function init (tenantId, apiKey, accessToken) {
 
     clientWrapper.init(tenantId, apiKey, accessToken)
       .then(initializedSDK => {
-        // logger.debug('sdk initialized successfully')
+        logger.debug('sdk initialized successfully')
         resolve(initializedSDK)
       })
       .catch(err => {
-        // logger.debug(`sdk init error: ${err}`)
+        logger.debug(`sdk init error: ${err}`)
         reject(err)
       })
   })
@@ -72,15 +72,15 @@ class ContentfragmentCoreAPI {
       throw new codes.ERROR_SDK_INITIALIZATION({ sdkDetails, messageValues: `${initErrors.join(', ')}` })
     } else {
       // init swagger client
-      const spec = require('../spec/target_api.json')
+      const spec = require('../spec/api.json')
       const swagger = new Swagger({
         spec: spec,
-        requestInterceptor: req => {
-          this.__setHeaders(req, this)
-        },
+        requestInterceptor,
+        responseInterceptor,
         usePromise: true
       })
       this.sdk = (await swagger)
+      console.log(this.sdk)
       this.tenant = tenantId
       this.apiKey = apiKey
       this.accessToken = accessToken
@@ -101,25 +101,24 @@ class ContentfragmentCoreAPI {
     const cfdetails = { cfName, cfParentPath, options }
     return new Promise((resolve, reject) => {
       this.sdk.apis.mycf.getContentFragment(cfdetails, this.__createRequestOptions())
-      // console.log("Here is what you're looking for" + this.__createRequestOptions)
-        .then(response => {
-          resolve(response)
-        })
+      // console.log('create request options: ' + this.__createRequestOptions)
+        .then(res => responseInterceptor(res).json())
+        .then(json => resolve(json))
         .catch(err => {
-          console.error(err)
+          reject(new codes.ERROR_GET_ALL_PROFILES({ cfdetails, messageValues: reduceError(err) }))
         })
     })
   }
 
-  createContentFragment (cfName, cfParentPath, options = {}) {
+  postContentFragment (cfName, cfParentPath, options = {}) {
     const cfdetails = { cfName, cfParentPath, options }
     return new Promise((resolve, reject) => {
-      this.sdk.apis.mycf.createContentFragment(cfdetails, this.__createRequest())
+      this.sdk.apis.mycf.createContentFragment(cfdetails, this.__createRequestOptions())
         .then(response => {
           resolve(response)
         })
         .catch(err => {
-          console.error(err)
+          reject(new codes.ERROR_GET_ALL_PROFILES({ cfdetails, messageValues: reduceError(err) }))
         })
     })
   }
@@ -132,7 +131,7 @@ class ContentfragmentCoreAPI {
           resolve(response)
         })
         .catch(err => {
-          console.error(err)
+          reject(new codes.ERROR_GET_ALL_PROFILES({ cfdetails, messageValues: reduceError(err) }))
         })
     })
   }
@@ -140,12 +139,12 @@ class ContentfragmentCoreAPI {
   deleteContentFragment (cfName, cfParentPath, options = {}) {
     const cfdetails = { cfName, cfParentPath, options }
     return new Promise((resolve, reject) => {
-      this.sdk.apis.mycf.deleteContentFragment(cfdetails, this.__createRequest({}))
+      this.sdk.apis.mycf.deleteContentFragment(cfdetails, this.__createRequestOptions({}))
         .then(response => {
           resolve(response.body)
         })
         .catch(err => {
-          console.error(err)
+          reject(new codes.ERROR_GET_ALL_PROFILES({ cfdetails, messageValues: reduceError(err) }))
         })
     })
   }

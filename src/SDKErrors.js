@@ -33,9 +33,9 @@ const Updater = createUpdater(
  */
 const E = ErrorWrapper(
   // The class name for your SDK Error. Your Error objects will be these objects
-  '{{LIB_NAME}}Error',
+  'ContentFragmentSDKError',
   // The name of your SDK. This will be a property in your Error objects
-  '{{LIB_NAME}}SDK',
+  'ContentFragmentSDK',
   // the object returned from the CreateUpdater call above
   Updater
   // the base class that your Error class is extending. AioCoreSDKError is the default
@@ -49,4 +49,32 @@ module.exports = {
 
 // Define your error codes with the wrapper
 E('ERROR_SDK_INITIALIZATION', 'SDK initialization error(s). Missing arguments: %s')
-E('ERROR_GET_SOMETHING', 'Something went wrong.')
+E('ERROR_GET_ALL_PROFILES', '%s')
+E('ERROR_CREATE_PROFILE', '%s')
+E('ERROR_UPDATE_PROFILE', '%s')
+E('ERROR_GET_PROFILE', '%s')
+E('ERROR_GET_ALL_SERVICES', '%s')
+E('ERROR_CREATE_SERVICE', '%s')
+E('ERROR_GET_SERVICE', '%s')
+E('ERROR_GET_HISTORY_OF_PROFILE', '%s')
+E('ERROR_INVALID_RESOURCE_TYPE', 'resource values can only be: %s')
+E('ERROR_GET_METADATA_FOR_RESOURCE', '%s')
+E('ERROR_GET_CUSTOM_RESOURCES', '%s')
+E('ERROR_GET_GDPR_REQUEST', '%s')
+E('ERROR_CREATE_GDPR_REQUEST', '%s')
+E('ERROR_GET_GDPR_DATA_FILE', '%s')
+E('ERROR_SEND_TRANSACTIONAL_EVENT', '%s')
+E('ERROR_GET_TRANSACTIONAL_EVENT', '%s')
+E('ERROR_GET_WORKFLOW', '%s')
+E('ERROR_TRIGGER_SIGNAL_ACTIVITY', '%s')
+E('ERROR_INVALID_WORKFLOW_CONTROL_COMMAND', 'command values can only be: %s')
+E('ERROR_CONTROL_WORKFLOW', '%s')
+E('ERROR_GET_ALL_ORG_UNITS', '%s')
+E('ERROR_GET_PROFILE_WITH_ORG_UNIT', '%s')
+E('ERROR_UPDATE_PROFILE_ORG_UNIT', '%s')
+E('ERROR_UPDATE_ORG_UNIT', '%s')
+E('ERROR_GET_DATA_FROM_RELATIVE_URL', '%s')
+E('ERROR_GET_ALL_CUSTOM_RESOURCES', '%s')
+E('ERROR_UPDATE_CUSTOM_RESOURCE', '%s')
+E('ERROR_CREATE_CUSTOM_RESOURCE', '%s')
+E('ERROR_DELETE_CUSTOM_RESOURCE', '%s')

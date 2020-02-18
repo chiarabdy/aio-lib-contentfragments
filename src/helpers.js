@@ -44,6 +44,7 @@ function createRequestOptions ({ tenantId, apiKey, accessToken, body = {} }) {
     requestBody: body,
     securities: {
       authorized: {
+        // // BasicAuth: { value: 'admin' },
         BearerAuth: { value: accessToken },
         ApiKeyAuth: { value: apiKey }
       }
@@ -61,7 +62,6 @@ function createRequestOptions ({ tenantId, apiKey, accessToken, body = {} }) {
 function requestInterceptor (req) {
   logger.debug(`REQUEST:\n ${JSON.stringify(req, null, 2)}`)
   return req
-  console.log(req);
 }
 
 /**

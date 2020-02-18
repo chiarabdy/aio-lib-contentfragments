@@ -16,9 +16,10 @@
     "generate-docs": "npm run typings && npm run jsdoc"
   },
   "dependencies": {
-    "@adobe/aio-lib-core-errors": "^3.0.0",
+    "@adobe/aio-lib-core-errors": "^3.0.1",
     "@adobe/aio-lib-core-logging": "1.0.0",
     "cross-fetch": "^3.0.4",
+    "joi": "^14.3.1",
     "swagger-client": "^3.9.0"
   },
   "devDependencies": {
@@ -26,7 +27,7 @@
     "@types/node-fetch": "^2.5.4",
     "babel-runtime": "^6.26.0",
     "codecov": "^3.5.0",
-    "dotenv": "^8.1.0",
+    "dotenv": "^8.2.0",
     "eol": "^0.9.1",
     "eslint": "^6.2.2",
     "eslint-config-standard": "^14.1.0",
